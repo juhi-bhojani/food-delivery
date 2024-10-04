@@ -23,7 +23,7 @@ const auth = async (req, res, next) => {
     // calling next middleware
     next();
   } catch (error) {
-    res.status(400).send("Please authenticate!!");
+    res.status(401).send("Please authenticate!!");
     logger.error(`Access by unauthorized user at ${req.url} and ${req.method}`);
   }
 };

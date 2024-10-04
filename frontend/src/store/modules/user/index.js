@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 const userModule = {
   state() {
     return {
@@ -18,6 +20,15 @@ const userModule = {
     },
     logout(context) {
       context.commit("logout");
+    },
+    initializeLoginState(context) {
+      const accessToken = Cookies.get("accessToken");
+      const refreshToken = Cookies.get("refreshToken");
+      if (accessToken && refreshToken) {
+        context.commit("login");
+      } else {
+        context.commit("logout");
+      }
     },
   },
   getters: {

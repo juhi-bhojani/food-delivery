@@ -70,7 +70,7 @@ export const getRefreshToken = async (refreshToken) => {
     if (!token) {
       throw new Error();
     }
-    if (token !== refreshToken) {
+    if (token.token !== refreshToken) {
       throw new Error();
     }
     const accessToken = jwt.sign(
@@ -80,6 +80,7 @@ export const getRefreshToken = async (refreshToken) => {
         expiresIn: process.env.ACCESSTOKENEXPIRY,
       }
     );
+
     return accessToken;
   } catch (error) {
     throw new Error("Unable to authenticate, please login!");
