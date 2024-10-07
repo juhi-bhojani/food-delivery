@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 // Function to send the reset email
 export const sendResetEmail = async (email, token) => {
-  const resetUrl = `http://localhost:8080/reset-password/${token}`;
+  const resetUrl = `http://192.1.200.190:8080/reset-password/${token}`;
 
   const mailOptions = {
     from: "juhi.bhojani@argusoft.in", // Replace with app's email

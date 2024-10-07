@@ -49,6 +49,7 @@ export default (sequelize, DataTypes) => {
       },
       country_code: {
         type: DataTypes.STRING,
+        allowNull: true,
         validate: {
           is: /^\+\d{1,4}$/, // Validates that country code starts with + and has 1-4 digits
         },
@@ -56,13 +57,14 @@ export default (sequelize, DataTypes) => {
       phone_number: {
         type: DataTypes.STRING,
         unique: true,
+        allowNull: true,
         validate: {
           is: /^[0-9]{7,15}$/, // Only numbers, 7 to 15 digits for the local part
         },
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       dob: {
         type: DataTypes.DATEONLY,

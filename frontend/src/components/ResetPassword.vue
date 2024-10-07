@@ -106,7 +106,12 @@ export default {
         const response = await resetPassword(payload, this.token);
 
         if (response.status === 200) {
-          alert("Password reset successful!");
+          toast("Password reset successful.", {
+            theme: "auto",
+            type: "info",
+            position: "bottom-center",
+            dangerouslyHTMLString: true,
+          });
           this.$router.push({ path: "/login" });
         }
       } catch (error) {

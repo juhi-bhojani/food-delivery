@@ -45,7 +45,6 @@ const router = createRouter({
 // navigation guard which ensures that access token is available
 router.beforeEach(async (to, from, next) => {
   const accessToken = Cookies.get("accessToken");
-  console.log(store);
 
   if (to.meta.requiresAuth && !accessToken) {
     try {
@@ -56,7 +55,7 @@ router.beforeEach(async (to, from, next) => {
         next();
       }
     } catch (error) {
-      await store.dispatch("user/logout");  
+      await store.dispatch("user/logout");
       next("/login");
     }
     await store.dispatch("user/logout");

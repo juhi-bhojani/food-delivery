@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true;
 export const logoutUser = async (accessToken) => {
   try {
     const response = await axios.post(
-        "http://localhost:3000/api/v1/logout",
+        "http://192.1.200.190:3000/api/v1/logout",
         {},
         {
           headers: {

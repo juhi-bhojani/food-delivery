@@ -14,7 +14,7 @@ module.exports = {
       },
       last_name: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       email: {
         type: Sequelize.STRING,
@@ -23,12 +23,14 @@ module.exports = {
       },
       country_code: {
         type: Sequelize.STRING,
+        allowNull: true,
         validate: {
           is: /^\+\d{1,4}$/, // Validates that country code starts with + and has 1-4 digits
         },
       },
       phone_number: {
         type: Sequelize.STRING,
+        allowNull: true,
         unique: true,
         validate: {
           is: /^[0-9]{7,15}$/, // Only numbers, 7 to 15 digits for the local part
@@ -36,7 +38,7 @@ module.exports = {
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       dob: {
         type: Sequelize.DATEONLY,

@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true;
 export const loginUser = async (payload) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/v1/login",
+      "http://192.1.200.190:3000/api/v1/login",
       payload,
       {
         headers: {

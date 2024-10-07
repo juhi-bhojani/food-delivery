@@ -95,8 +95,8 @@
                 v-model="dob"
                 @blur="touched.dob = true"
               />
-              <h6 v-if="touched.dob && !isdobValid" class="text-danger">
-                Birth date can't be in future!
+              <h6 v-if="touched.dob && !isDobValid" class="text-danger">
+                You must be 13 years of age to open an account!
               </h6>
             </div>
           </div>
@@ -207,9 +207,22 @@ export default {
     isFirstNameValid() {
       return this.first_name !== "";
     },
-    isdobValid() {
-      return new Date(this.dob) < new Date();
+    isDobValid() {
+      if (!this.dob) return true; // Return true if DOB is not provided
+
+      const dob = new Date(this.dob);
+      const today = new Date();
+      const age = today.getFullYear() - dob.getFullYear();
+
+      // Check if the current date has passed the birthday this year
+      const hasBirthdayPassed =
+        today.getMonth() > dob.getMonth() ||
+        (today.getMonth() === dob.getMonth() &&
+          today.getDate() >= dob.getDate());
+
+      return age > 13 || (age === 13 && hasBirthdayPassed);
     },
+
     validatePassword() {
       return this.password === this.confirmPassword;
     },
@@ -219,7 +232,7 @@ export default {
         this.isFirstNameValid &&
         !this.displayError && // password validation
         this.validatePassword &&
-        this.isdobValid &&
+        this.isDobValid &&
         this.phone_number // check if not empty
       );
     },

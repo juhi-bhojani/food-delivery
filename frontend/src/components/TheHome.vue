@@ -35,7 +35,7 @@ export default {
       if (accessToken && refreshToken) {
         try {
           const response = await axios.get(
-            "http://localhost:3000/api/v1/profile",
+            "http://192.1.200.190:3000/api/v1/profile",
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`, // Pass access token in headers

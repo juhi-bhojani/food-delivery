@@ -15,9 +15,20 @@ config({
   path: join(__dirname, "../", "dev.env"),
 });
 
+const allowedOrigins = ["http://localhost:8080", "http://192.1.200.190:8080"];
+
+// Set up CORS options
 const corsOptions = {
-  origin: "http://localhost:8080", // Frontend origin
-  credentials: true, // Allow sending cookies
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // Enable set cookie on the client side
 };
 
 const app = express();
@@ -32,6 +43,11 @@ app.use("/api/v1/", authRouter);
 app.get("/", async (req, res) => {
   res.send("Hello");
 });
+
+// app.listen(3000, "192.1.200.190", () => {
+//   database.check();
+//   console.log("Listening to port");
+// });
 
 app.listen(3000, () => {
   database.check();

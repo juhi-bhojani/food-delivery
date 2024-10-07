@@ -1,10 +1,11 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "password",
-    "database": "database",
-    "host": "localhost",
-    "dialect": "postgres"
+    "username": "tsdbadmin",
+    "password": "ir26jas5l49h7enn",
+    "database": "tsdb",
+    "host": "e0cuomycut.cpg3f7pxxn.tsdb.cloud.timescale.com",
+    "dialect": "postgres",
+    "port": 31298
   },
   "test": {
     "username": "root",

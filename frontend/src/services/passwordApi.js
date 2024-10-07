@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true;
 export const forgotPassword = async (payload) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/v1/forget-password",
+      "http://192.1.200.190:3000/api/v1/forget-password",
       payload
     );
     return response;
@@ -18,10 +18,10 @@ export const forgotPassword = async (payload) => {
   }
 };
 
-export const resetPassword = async (payload,token) => {
+export const resetPassword = async (payload, token) => {
   try {
     const response = await axios.post(
-      `http://localhost:3000/api/v1/reset-password/${token}`,
+      `http://192.1.200.190:3000/api/v1/reset-password/${token}`,
       payload
     );
 

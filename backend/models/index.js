@@ -19,11 +19,25 @@ const user = process.env.USER;
 const password = process.env.PASSWORD;
 
 // connect to local database
-const sequelize = new Sequelize(database, user, password, {
-  host: "localhost",
-  dialect: "postgres",
-  logging: false,
-});
+// const sequelize = new Sequelize(database, user, password, {
+//   host: "localhost",
+//   dialect: "postgres",
+//   logging: false,
+// });
+
+const sequelize = new Sequelize(
+  process.env.DATABASE_URL,
+  {
+    dialect: "postgres",
+    protocol: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
+  }
+);
 
 const db = {};
 db.Sequelize = Sequelize;
