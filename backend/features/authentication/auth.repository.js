@@ -9,7 +9,6 @@ export const findUser = async (user) => {
     const userDetails = await User.findOne({
       where: { email: user.email },
     });
-
     logger.info({
       operation: "database query",
       data: {
