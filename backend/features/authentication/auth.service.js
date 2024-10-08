@@ -14,9 +14,11 @@ import { sendResetEmail } from "../../utils/emailSender.js";
 import moment from "moment";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import decryptData from "../../utils/decryptPassword.js";
 
 export const loginUser = async (user, roleType) => {
   try {
+    user.password = decryptData(user.password)
     const userDetails = await findUser(user);
     const expiresAt = moment().add(7, "days").toDate();
 

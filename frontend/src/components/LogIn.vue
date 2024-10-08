@@ -27,13 +27,27 @@
               >Password</label
             >
             <div class="col-sm-8">
-              <input
-                type="password"
+
+            <input
+                :type="showPassword ? 'text' : 'password'"
                 class="form-control"
                 id="inputPassword"
                 v-model.trim="password"
+                @blur="touched.password = true"
                 required
               />
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                @click="togglePasswordVisibility"
+              >
+                <i
+                  :class="{
+                    'bx bx-hide': showPassword === true,
+                    'bx bx-show': showPassword === false,
+                  }"
+                ></i>
+              </button>
             </div>
           </div>
 
@@ -71,6 +85,7 @@ export default {
     return {
       email: "",
       password: "",
+      showPassword:false,
       touched: {
         email: false,
       },
@@ -89,6 +104,9 @@ export default {
   },
   methods: {
     ...mapActions(["login"]),
+    togglePasswordVisibility(){
+      this.showPassword = !this.showPassword
+    },
     async submit() {
       if (!this.isEmailValid) {
         this.touched.email = true;

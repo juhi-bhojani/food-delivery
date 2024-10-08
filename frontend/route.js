@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { getAccessToken } from "@/services/TokenApi";
 import DashBoard from "@/components/DashBoard.vue";
 import store from "@/store";
+import NotFound from "@/components/NotFound.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -38,6 +39,10 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
       },
+    },
+    {
+      path: "/:notFound(.*)",
+      component: NotFound,
     },
   ],
 });

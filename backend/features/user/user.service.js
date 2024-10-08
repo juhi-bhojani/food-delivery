@@ -5,6 +5,7 @@ import {
 import validator from "validator";
 import { getRoleId } from "../role/role.repository.js";
 import { createUserRole } from "../user_role/user_role.repository.js";
+import decryptData from "../../utils/decryptPassword.js";
 
 function validatePassword(password) {
   const minLength = /.{8,}/; // At least 8 characters
@@ -76,6 +77,8 @@ export const addUser = async (userDetails, role) => {
     if (!validator.isEmail(userDetails.email)) {
       throw new Error("Please enter correct email address");
     }
+
+    userDetails.password = decryptData(userDetails.password);
 
     if (validatePassword(userDetails.password) !== true) {
       throw new Error(validatePassword(userDetails.password));

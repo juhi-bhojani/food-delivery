@@ -1,9 +1,11 @@
+import encryptData from "@/utils/encryptPassword";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
 export const registerUser = async (payload) => {
   try {
+    payload.password = encryptData(payload.password);
     const response = await axios.post(
       "http://192.1.200.190:3000/api/v1/register",
       payload,

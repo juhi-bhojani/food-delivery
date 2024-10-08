@@ -1,8 +1,11 @@
 <template>
   <div class="d-flex justify-content-center align-items-center">
+    <link rel=”stylesheet”
+    href=”https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css”
+    />
     <div class="card" style="width: 30rem">
       <div class="card-body">
-        <h3 class="card-title text-center">Sign In</h3>
+        <h3 class="card-title text-center">Sign Up</h3>
         <form @submit.prevent="submit">
           <div class="mb-3 row">
             <label for="firstName" class="col-sm-4 col-form-label"
@@ -107,13 +110,25 @@
             >
             <div class="col-sm-8">
               <input
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 class="form-control"
                 id="inputPassword"
                 v-model.trim="password"
                 @blur="touched.password = true"
                 required
               />
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                @click="togglePasswordVisibility"
+              >
+                <i
+                  :class="{
+                    'bx bx-hide': showPassword === true,
+                    'bx bx-show': showPassword === false,
+                  }"
+                ></i>
+              </button>
               <h6 v-if="touched.password && displayError" class="text-danger">
                 Password must be 8 characters long, one uppercase, one
                 lowercase, and one special symbol.
@@ -127,13 +142,25 @@
             >
             <div class="col-sm-8">
               <input
-                type="password"
+                :type="showConfirmPassword ? 'text' : 'password'"
                 class="form-control"
                 id="confirmPassword"
                 v-model.trim="confirmPassword"
                 @blur="touched.confirmPassword = true"
                 required
               />
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                @click="toggleConfirmPasswordVisibility"
+              >
+                <i
+                  :class="{
+                    'bx bx-hide': showConfirmPassword === true,
+                    'bx bx-show': showConfirmPassword === false,
+                  }"
+                ></i>
+              </button>
               <h6
                 v-if="touched.confirmPassword && !validatePassword"
                 class="text-danger"
@@ -174,6 +201,8 @@ export default {
       dob: "",
       email: "",
       confirmPassword: "",
+      showPassword: false,
+      showConfirmPassword: false,
       touched: {
         first_name: false,
         email: false,
@@ -238,6 +267,12 @@ export default {
     },
   },
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
+    toggleConfirmPasswordVisibility() {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    },
     async submit() {
       try {
         const payload = {
