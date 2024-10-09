@@ -27,8 +27,7 @@
               >Password</label
             >
             <div class="col-sm-8">
-
-            <input
+              <input
                 :type="showPassword ? 'text' : 'password'"
                 class="form-control"
                 id="inputPassword"
@@ -85,7 +84,7 @@ export default {
     return {
       email: "",
       password: "",
-      showPassword:false,
+      showPassword: false,
       touched: {
         email: false,
       },
@@ -103,9 +102,9 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["login"]),
-    togglePasswordVisibility(){
-      this.showPassword = !this.showPassword
+    ...mapActions(["login", "user"]),
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
     },
     async submit() {
       if (!this.isEmailValid) {
@@ -123,6 +122,8 @@ export default {
         const response = await loginUser(payload);
         if (response.status === 200) {
           this.login();
+          this.user(response.data.data.user);
+          console.log("document.cookie", document.cookie);
           this.$router.push({
             path: "/",
           });

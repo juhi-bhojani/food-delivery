@@ -5,23 +5,16 @@ const { User, RefreshToken } = database.db;
 import CustomError from "../../utils/customError.js";
 
 export const findUser = async (user) => {
-  try {
-    const userDetails = await User.findOne({
-      where: { email: user.email },
-    });
-    logger.info({
-      operation: "database query",
-      data: {
-        user: userDetails,
-      },
-    });
-    return userDetails;
-  } catch (error) {
-    logger.error({
-      error: error,
-    });
-    throw new CustomError("Internal Server Error", 500);
-  }
+  const userDetails = await User.findOne({
+    where: { email: user.email },
+  });
+  logger.info({
+    operation: "database query",
+    data: {
+      user: userDetails,
+    },
+  });
+  return userDetails;
 };
 
 export const storeRefreshToken = async (tokenDetails) => {

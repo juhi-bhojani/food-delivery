@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import { config } from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { errorMiddleware } from "./middlewares/error.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,15 +20,16 @@ const allowedOrigins = ["http://localhost:8080", "http://192.1.200.190:8080"];
 
 // Set up CORS options
 const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, etc.)
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  // origin: (origin, callback) => {
+  //   // Allow requests with no origin (like mobile apps, curl, etc.)
+  //   if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+  //     callback(null, true);
+  //   } else {
+  //     callback(new Error("Not allowed by CORS"));
+  //   }
+  // },
+  origin: allowedOrigins,
+  // methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // Enable set cookie on the client side
 };
 
@@ -48,6 +50,7 @@ app.get("/", async (req, res) => {
 //   database.check();
 //   console.log("Listening to port");
 // });
+app.use(errorMiddleware);
 
 app.listen(3000, () => {
   database.check();

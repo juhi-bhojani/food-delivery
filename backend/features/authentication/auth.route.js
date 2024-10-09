@@ -1,7 +1,6 @@
 import { Router } from "express";
 import session from "express-session";
 import {
-  refreshToken,
   userLogin,
   userLogout,
   forgetPassword,
@@ -28,7 +27,6 @@ router.use(passport.session());
 
 router.post("/login", userLogin);
 router.post("/logout", auth, userLogout);
-router.post("/refresh", refreshToken);
 router.post("/forget-password", forgetPassword);
 router.post("/reset-password/:token", resetPassword);
 router.get(
@@ -39,7 +37,6 @@ router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    
     // Successful authentication, redirect or handle the user as desired
     res.redirect("/");
   }

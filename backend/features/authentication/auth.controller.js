@@ -2,7 +2,6 @@ import logger from "../../utils/logger.js";
 import {
   loginUser,
   deleteToken,
-  getRefreshToken,
   sendPasswordResetEmail,
   passwordReset,
 } from "./auth.service.js";
@@ -20,16 +19,14 @@ export const userLogin = async (req, res) => {
 
     // Set cookies
     res.cookie("accessToken", accessToken, {
-      // httpOnly: false,
-      // secure: false,
-      // sameSite: "none", // prevents CSRF attacks - if strict
+      // httpOnly: true, // client side can't access this cookie
+      // sameSite: "strict", // prevents CSRF attacks - if strict
       maxAge: 60 * 60 * 1000, // 60 minutes
     });
 
     res.cookie("refreshToken", refreshToken, {
-      // httpOnly: false,
-      // secure: false,
-      // sameSite: "none", // prevents CSRF attacks - if strict
+      // httpOnly: true,
+      // sameSite: "strict", // prevents CSRF attacks - if strict - doesn't work with CORS
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -61,7 +58,7 @@ export const userLogin = async (req, res) => {
 export const userLogout = async (req, res) => {
   try {
     const token = await deleteToken(req.user.uuid, req.role);
-    res.clearCookie("accessToken", { httpOnly: false, sameSite: "none" }); // name of cookie
+    res.clearCookie("accessToken"); // name of cookie
     res.clearCookie("refreshToken");
     res
       .status(200)
@@ -71,36 +68,6 @@ export const userLogout = async (req, res) => {
       status: "Failure",
       message: "Sorry, unable to logout user",
     });
-  }
-};
-
-export const refreshToken = async (req, res) => {
-  const { refreshToken } = req.cookies;
-  try {
-    const accessToken = await getRefreshToken(refreshToken);
-
-    // Set cookies
-    res.cookie("accessToken", accessToken, {
-      // httpOnly: true,
-      // sameSite: "Strict", // prevents CSRF attacks
-      maxAge: 60 * 60 * 1000, // 60 minutes
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      // httpOnly: true,
-      // sameSite: "Strict", // prevents CSRF attacks
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    });
-
-    res.status(200).json({});
-  } catch (e) {
-    res.status(400).json({
-      status: "Failure",
-      message: "Sorry, unable to authencticate user",
-    });
-    logger.error(
-      `Error occurred: ${e} at ${req.url} and method: ${req.method}`
-    );
   }
 };
 

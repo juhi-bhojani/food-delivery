@@ -42,7 +42,6 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { logoutUser } from "@/services/LogoutApi";
-import Cookies from "js-cookie";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
@@ -56,23 +55,14 @@ export default {
     ...mapActions(["logout"]),
     async logoutUser() {
       try {
-        const accessToken = Cookies.get("accessToken");
-
-        if (accessToken) {
-          const response = await logoutUser(accessToken);
-          if (response.status === 200) {
-            this.logout();
-            Cookies.remove("accessToken");
-            Cookies.remove("refreshToken");
-
-            // Redirect user with a success message
-            this.$router.push({
-              path: "/login",
-            });
-          }
-        } else {
+        const response = await logoutUser();
+        if (response.status === 200) {
           this.logout();
-          throw new Error("Some Error occured!");
+
+          // Redirect user with a success message
+          this.$router.push({
+            path: "/login",
+          });
         }
       } catch (error) {
         toast(error, {
