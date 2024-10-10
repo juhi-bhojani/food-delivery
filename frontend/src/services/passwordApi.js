@@ -1,13 +1,11 @@
+import { backendUrl } from "@/config";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
 export const forgotPassword = async (payload) => {
   try {
-    const response = await axios.post(
-      "http://192.1.200.190:3000/api/v1/forget-password",
-      payload
-    );
+    const response = await axios.post(`${backendUrl}/forget-password`, payload);
     return response;
   } catch (error) {
     throw new Error(
@@ -21,7 +19,7 @@ export const forgotPassword = async (payload) => {
 export const resetPassword = async (payload, token) => {
   try {
     const response = await axios.post(
-      `http://192.1.200.190:3000/api/v1/reset-password/${token}`,
+      `${backendUrl}/reset-password/${token}`,
       payload
     );
 

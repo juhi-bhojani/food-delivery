@@ -5,7 +5,7 @@ const userModule = {
   state() {
     return {
       isLoggedIn: false,
-      user: {},
+      user: null,
     };
   },
   mutations: {
@@ -15,8 +15,11 @@ const userModule = {
     logout(state) {
       state.isLoggedIn = false;
     },
-    user(state, userDetails) {
+    set_user(state, userDetails) {
       state.user = userDetails;
+    },
+    clear_user(state) {
+      state.user = null;
     },
   },
   actions: {
@@ -24,23 +27,20 @@ const userModule = {
       context.commit("login");
     },
     logout(context) {
+      context.commit("clear_user");
       context.commit("logout");
-    },
-    user(context, payload) {
-      context.commit("user", payload);
     },
     async initializeLoginState(context) {
       try {
+        console.log("initialize login state");
         const response = await axios.get(`${backendUrl}/profile`, {
           withCredentials: true,
         });
 
         if (response.status === 200) {
+          context.commit("set_user", response?.data?.data?.user);
           context.commit("login");
-          // this.user = response.data.data.user; // Set user data to the component's state
-          console.log(response.data.data.user);
-
-          context.commit("user", response?.data?.data?.user);
+          console.log(response?.data?.data?.user);
         }
       } catch (error) {
         context.commit("logout");

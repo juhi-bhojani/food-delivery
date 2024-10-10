@@ -73,6 +73,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true, // Allow null for users without a reset token
       },
+      reset_token_expiry: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
       created_by: {
         type: DataTypes.UUID,
       },

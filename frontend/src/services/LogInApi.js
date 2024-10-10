@@ -1,3 +1,4 @@
+import { backendUrl } from "@/config";
 import encryptData from "@/utils/encryptPassword";
 import axios from "axios";
 
@@ -6,16 +7,12 @@ axios.defaults.withCredentials = true;
 export const loginUser = async (payload) => {
   try {
     payload.password = encryptData(payload.password);
-    const response = await axios.post(
-      "http://192.1.200.190:3000/api/v1/login",
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
+    const response = await axios.post(`${backendUrl}/login`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
 
     return response;
   } catch (error) {

@@ -25,6 +25,7 @@ export const registerUser = asyncErrorHandler(async (req, res) => {
         400
       );
     } else {
+      // create new role for existing user
       return res.status(200).json({
         status: "Success",
         message: existingUser.message,
@@ -59,19 +60,12 @@ export const registerUser = asyncErrorHandler(async (req, res) => {
   });
 });
 
-export const userProfile = async (req, res) => {
-  try {
-    const user = req.user;
-    res.status(200).json({
-      status: "Success",
-      data: {
-        user: user,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "Failure",
-      message: "Sorry, Internal server error!",
-    });
-  }
-};
+export const userProfile = asyncErrorHandler(async (req, res) => {
+  const user = req.user;
+  res.status(200).json({
+    status: "Success",
+    data: {
+      user: user,
+    },
+  });
+});

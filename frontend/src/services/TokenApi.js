@@ -1,3 +1,4 @@
+import { backendUrl } from "@/config";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -5,7 +6,7 @@ axios.defaults.withCredentials = true;
 export const getAccessToken = async () => {
   try {
     const response = await axios.post(
-      "http://192.1.200.190:3000/api/v1/refresh",
+      `${backendUrl}/refresh`,
       {},
       {
         withCredentials: true,
