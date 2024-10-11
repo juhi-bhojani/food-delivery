@@ -11,12 +11,24 @@
             >
             <div class="col-sm-8">
               <input
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 class="form-control"
                 id="inputPassword"
                 v-model.trim="password"
                 required
               />
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                @click="togglePasswordVisibility"
+              >
+                <i
+                  :class="{
+                    'bx bx-hide': showPassword === true,
+                    'bx bx-show': showPassword === false,
+                  }"
+                ></i>
+              </button>
               <h6 v-if="displayError" style="color: red">
                 Password must be 8 characters long, one uppercase, one
                 lowercase, and one special symbol.
@@ -31,13 +43,25 @@
             >
             <div class="col-sm-8">
               <input
-                type="password"
+                :type="showConfirmPassword ? 'text' : 'password'"
                 class="form-control"
                 id="confirmPassword"
                 v-model.trim="confirmPassword"
                 required
                 @input="validatePasswords()"
               />
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                @click="toggleConfirmPasswordVisibility"
+              >
+                <i
+                  :class="{
+                    'bx bx-hide': showConfirmPassword === true,
+                    'bx bx-show': showConfirmPassword === false,
+                  }"
+                ></i>
+              </button>
               <h6 v-if="error.confirmPassword" style="color: red">
                 Passwords do not match!
               </h6>
@@ -59,8 +83,8 @@
 
 <script>
 import { resetPassword } from "@/services/passwordApi";
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
+import encryptData from "@/utils/encryptPassword";
+import { errorToast, infoToast } from "@/utils/toast";
 
 export default {
   data() {
@@ -68,6 +92,8 @@ export default {
       password: "",
       confirmPassword: "",
       displayError: false,
+      showConfirmPassword: false,
+      showPassword: false,
       token: this.$route.params.token,
       error: {
         confirmPassword: false,
@@ -92,6 +118,12 @@ export default {
     },
   },
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
+    toggleConfirmPasswordVisibility() {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    },
     validatePasswords() {
       this.error.confirmPassword = this.password !== this.confirmPassword;
     },
@@ -99,28 +131,18 @@ export default {
       try {
         // Creating payload for request
         const payload = {
-          password: this.password,
+          password: encryptData(this.password),
         };
 
         // Send request to backend for password reset
         const response = await resetPassword(payload, this.token);
 
         if (response.status === 200) {
-          toast("Password reset successful.", {
-            theme: "auto",
-            type: "info",
-            position: "bottom-center",
-            dangerouslyHTMLString: true,
-          });
+          infoToast("Password reset successful.");
           this.$router.push({ path: "/login" });
         }
       } catch (error) {
-        toast(error, {
-          theme: "auto",
-          type: "error",
-          position: "bottom-center",
-          dangerouslyHTMLString: true,
-        });
+        errorToast(error);
       }
     },
   },

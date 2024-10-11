@@ -1,6 +1,7 @@
 import logger from "../../utils/logger.js";
 import database from "../../models/index.js";
 import bcrypt from "bcryptjs";
+import CustomError from "../../utils/customError.js";
 const { User, RefreshToken } = database.db;
 
 export const findUser = async (user) => {
@@ -79,18 +80,14 @@ export const selectRefreshToken = async (user_uuid, role_uuid) => {
 };
 
 export const savePasswordResetToken = async (
-  user_uuid,
+  user,
   { resetToken, resetTokenExpiry }
 ) => {
-  await User.update(
-    {
-      reset_token: resetToken,
-      reset_token_expiry: resetTokenExpiry,
-    },
-    {
-      where: { uuid: user_uuid },
-    }
-  );
+  await user.update({
+    reset_token: resetToken,
+    reset_token_expiry: resetTokenExpiry,
+  });
+  await user.save();
 };
 
 export const findUserByResetToken = async (token) => {
@@ -106,6 +103,7 @@ export const clearResetToken = async (user_uuid) => {
   await User.update(
     {
       reset_token: null,
+      reset_token_expiry: null,
     },
     {
       where: { uuid: user_uuid },
@@ -113,14 +111,18 @@ export const clearResetToken = async (user_uuid) => {
   );
 };
 
-export const updateUserPassword = async (user_uuid, password) => {
+export const updateUserPassword = async (user, oldPassword, password) => {
   const hashedPassword = await bcrypt.hash(password, 8);
+
+  if (await user.validatePassword(password)) {
+    throw new CustomError("New password can not be same as old password!", 400);
+  }
   await User.update(
     {
       password: hashedPassword,
     },
     {
-      where: { uuid: user_uuid },
+      where: { uuid: user.uuid },
     }
   );
 };

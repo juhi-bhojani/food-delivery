@@ -49,9 +49,8 @@
 
 <script>
 import validator from "validator";
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 import { forgotPassword } from "@/services/passwordApi";
+import { infoToast, errorToast } from "@/utils/toast";
 
 export default {
   data() {
@@ -76,21 +75,13 @@ export default {
         const response = await forgotPassword(payload);
 
         if (response.status === 200) {
-          toast("Password reset instructions have been sent to your email.", {
-            theme: "auto",
-            type: "info",
-            position: "bottom-center",
-            dangerouslyHTMLString: true,
-          });
+          infoToast(
+            "Password reset instructions have been sent to your email."
+          );
           this.email = ""; // Clear email input
         }
       } catch (error) {
-        toast(error, {
-          theme: "auto",
-          type: "error",
-          position: "bottom-center",
-          dangerouslyHTMLString: true,
-        });
+        errorToast(error);
       } finally {
         this.isLoading = false; // Stop loading
       }

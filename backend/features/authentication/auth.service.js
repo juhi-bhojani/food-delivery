@@ -91,7 +91,7 @@ export const sendPasswordResetEmail = async (email) => {
     Date.now() + parseInt(process.env.RESET_TOKEN_EXPIRY)
   );
 
-  await savePasswordResetToken(user.uuid, { resetToken, resetTokenExpiry });
+  await savePasswordResetToken(user, { resetToken, resetTokenExpiry });
 
   await sendResetEmail(email, token);
 };
@@ -106,6 +106,6 @@ export const passwordReset = async (token, newPassword) => {
       401
     );
 
-  await updateUserPassword(user.uuid, newPassword);
+  await updateUserPassword(user, user.password, newPassword);
   await clearResetToken(user.uuid);
 };

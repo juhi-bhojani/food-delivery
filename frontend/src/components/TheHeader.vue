@@ -29,7 +29,7 @@
             <router-link class="nav-link" to="/register">Sign-up</router-link>
           </span>
           <span class="navbar-text" v-if="isLoggedIn">
-            <router-link class="nav-link" to="/" @click="logoutUser"
+            <router-link class="nav-link" to="/" @click="logOutUser"
               >Logout</router-link
             >
           </span>
@@ -42,8 +42,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { logoutUser } from "@/services/LogoutApi";
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
+import { errorToast } from "@/utils/toast";
 
 export default {
   computed: {
@@ -53,7 +52,7 @@ export default {
   },
   methods: {
     ...mapActions(["logout"]),
-    async logoutUser() {
+    async logOutUser() {
       try {
         const response = await logoutUser();
         if (response.status === 200) {
@@ -65,12 +64,7 @@ export default {
           });
         }
       } catch (error) {
-        toast(error, {
-          theme: "auto",
-          type: "error",
-          position: "bottom-center",
-          dangerouslyHTMLString: true,
-        });
+        errorToast(error);
       }
     },
   },

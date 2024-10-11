@@ -62,18 +62,10 @@
           </div>
 
           <div class="mb-3 row">
-            <div class="col-sm-4">
-              <select
-                class="form-select"
-                id="countryCode"
-                v-model="country_code"
-              >
-                <option value="" disabled>Select Country Code</option>
-                <option value="+1">+1</option>
-                <option value="+44">+44</option>
-                <option value="+91" selected>+91</option>
-              </select>
-            </div>
+            <label for="phone" class="col-sm-4 col-form-label"
+              >Phone Number</label
+            >
+
             <div class="col-sm-8">
               <input
                 type="number"
@@ -81,8 +73,15 @@
                 id="phone"
                 v-model="phone_number"
                 placeholder="Phone Number"
+                @blur="touched.phone_number = true"
                 required
               />
+              <h6
+                v-if="touched.phone_number && !isPhoneNumberValid"
+                class="text-danger"
+              >
+                Phone number must be 10 digits long
+              </h6>
             </div>
           </div>
 
@@ -185,9 +184,9 @@
 
 <script>
 import validator from "validator";
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 import { registerUser } from "@/services/SignUpApi";
+import { errorToast } from "@/utils/toast";
+import { countryCode } from "@/config";
 
 export default {
   data() {
@@ -197,7 +196,6 @@ export default {
       first_name: "",
       last_name: "",
       phone_number: "",
-      country_code: "",
       dob: "",
       email: "",
       confirmPassword: "",
@@ -208,6 +206,7 @@ export default {
         email: false,
         dob: false,
         password: false,
+        phone_number: false,
         confirmPassword: false,
       },
     };
@@ -251,7 +250,9 @@ export default {
 
       return age > 13 || (age === 13 && hasBirthdayPassed);
     },
-
+    isPhoneNumberValid() {
+      return this.phone_number.toString().length === 10;
+    },
     validatePassword() {
       return this.password === this.confirmPassword;
     },
@@ -279,7 +280,7 @@ export default {
           first_name: this.first_name,
           last_name: this.last_name,
           email: this.email,
-          country_code: this.country_code,
+          country_code: countryCode,
           phone_number: this.phone_number.toString(),
           dob: this.dob,
           password: this.password,
@@ -299,12 +300,7 @@ export default {
           });
         }
       } catch (error) {
-        toast(error, {
-          theme: "auto",
-          type: "error",
-          position: "bottom-center",
-          dangerouslyHTMLString: true,
-        });
+        errorToast(error);
       }
     },
   },

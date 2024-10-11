@@ -32,7 +32,6 @@ const userModule = {
     },
     async initializeLoginState(context) {
       try {
-        console.log("initialize login state");
         const response = await axios.get(`${backendUrl}/profile`, {
           withCredentials: true,
         });
@@ -40,7 +39,6 @@ const userModule = {
         if (response.status === 200) {
           context.commit("set_user", response?.data?.data?.user);
           context.commit("login");
-          console.log(response?.data?.data?.user);
         }
       } catch (error) {
         context.commit("logout");

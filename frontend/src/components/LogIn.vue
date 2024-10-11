@@ -74,10 +74,9 @@
 
 <script>
 import { loginUser } from "@/services/LogInApi";
+import { errorToast } from "@/utils/toast";
 import validator from "validator";
 import { mapActions } from "vuex";
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 
 export default {
   data() {
@@ -123,18 +122,12 @@ export default {
         if (response.status === 200) {
           this.login();
           this.user(response.data.data.user);
-          console.log("document.cookie", document.cookie);
           this.$router.push({
             path: "/",
           });
         }
       } catch (error) {
-        toast(error, {
-          theme: "auto",
-          type: "error",
-          position: "bottom-center",
-          dangerouslyHTMLString: true,
-        });
+        errorToast(error);
       }
     },
   },

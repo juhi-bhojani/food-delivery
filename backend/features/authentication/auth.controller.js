@@ -1,3 +1,4 @@
+import decryptData from "../../utils/decryptPassword.js";
 import { asyncErrorHandler } from "../../utils/globalErrorHandler.js";
 import {
   loginUser,
@@ -24,7 +25,7 @@ export const userLogin = asyncErrorHandler(async (req, res) => {
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    maxAge: parseInt(process.env.REFRESH_TOKEN_EXPIRY_COOKIE) / 1000,
+    maxAge: parseInt(process.env.REFRESH_TOKEN_EXPIRY_COOKIE),
   });
 
   return res.status(200).json({
@@ -59,7 +60,7 @@ export const forgetPassword = asyncErrorHandler(async (req, res) => {
 
 export const resetPassword = asyncErrorHandler(async (req, res) => {
   const { token } = req.params;
-  const newPassword = req.body.password;
+  const newPassword = decryptData(req.body.password);
   await passwordReset(token, newPassword);
   return res
     .status(200)
