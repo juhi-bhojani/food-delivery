@@ -24,7 +24,13 @@ const auth = async (req, res, next) => {
         throw new Error();
       }
       // attaching user details with request
-      req.user = user;
+      req.user = {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        phone_number: user.phone_number,
+        uuid: user.uuid,
+      };
       req.role = decoded.role;
 
       // calling next middleware

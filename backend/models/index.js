@@ -55,7 +55,7 @@ db.RefreshToken.belongsTo(db.Role, {
   foreignKey: "role_uuid",
 });
 
-const check = async () => {
+const connectDB = async () => {
   try {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
@@ -67,4 +67,4 @@ const check = async () => {
   }
 };
 
-export default { db, check };
+export default { db, connectDB };

@@ -1,306 +1,251 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center">
-    <link rel=”stylesheet”
-    href=”https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css”
-    />
-    <div class="card" style="width: 30rem">
-      <div class="card-body">
-        <h3 class="card-title text-center">Sign Up</h3>
-        <form @submit.prevent="submit">
-          <div class="mb-3 row">
-            <label for="firstName" class="col-sm-4 col-form-label"
-              >First Name</label
-            >
-            <div class="col-sm-8">
-              <input
-                type="text"
-                class="form-control"
-                id="firstName"
-                v-model.trim="first_name"
-                @blur="touched.first_name = true"
-                required
-              />
-              <h6
-                v-if="touched.first_name && !isFirstNameValid"
-                class="text-danger"
-              >
-                Please enter first name!
-              </h6>
-            </div>
-          </div>
-
-          <div class="mb-3 row">
-            <label for="lastName" class="col-sm-4 col-form-label"
-              >Last Name</label
-            >
-            <div class="col-sm-8">
-              <input
-                type="text"
-                class="form-control"
-                id="lastName"
-                v-model.trim="last_name"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="mb-3 row">
-            <label for="email" class="col-sm-4 col-form-label">Email</label>
-            <div class="col-sm-8">
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                v-model.trim="email"
-                @blur="touched.email = true"
-                required
-              />
-              <h6 v-if="touched.email && !isEmailValid" class="text-danger">
-                Please enter a correct email!
-              </h6>
-            </div>
-          </div>
-
-          <div class="mb-3 row">
-            <label for="phone" class="col-sm-4 col-form-label"
-              >Phone Number</label
-            >
-
-            <div class="col-sm-8">
-              <input
-                type="number"
-                class="form-control"
-                id="phone"
-                v-model="phone_number"
-                placeholder="Phone Number"
-                @blur="touched.phone_number = true"
-                required
-              />
-              <h6
-                v-if="touched.phone_number && !isPhoneNumberValid"
-                class="text-danger"
-              >
-                Phone number must be 10 digits long
-              </h6>
-            </div>
-          </div>
-
-          <div class="mb-3 row">
-            <label for="dob" class="col-sm-4 col-form-label"
-              >Date of Birth</label
-            >
-            <div class="col-sm-8">
-              <input
-                type="date"
-                class="form-control"
-                id="dob"
-                v-model="dob"
-                @blur="touched.dob = true"
-              />
-              <h6 v-if="touched.dob && !isDobValid" class="text-danger">
-                You must be 13 years of age to open an account!
-              </h6>
-            </div>
-          </div>
-
-          <div class="mb-3 row">
-            <label for="inputPassword" class="col-sm-4 col-form-label"
-              >Password</label
-            >
-            <div class="col-sm-8">
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                class="form-control"
-                id="inputPassword"
-                v-model.trim="password"
-                @blur="touched.password = true"
-                required
-              />
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                @click="togglePasswordVisibility"
-              >
-                <i
-                  :class="{
-                    'bx bx-hide': showPassword === true,
-                    'bx bx-show': showPassword === false,
-                  }"
-                ></i>
-              </button>
-              <h6 v-if="touched.password && displayError" class="text-danger">
-                Password must be 8 characters long, one uppercase, one
-                lowercase, and one special symbol.
-              </h6>
-            </div>
-          </div>
-
-          <div class="mb-3 row">
-            <label for="confirmPassword" class="col-sm-4 col-form-label"
-              >Confirm Password</label
-            >
-            <div class="col-sm-8">
-              <input
-                :type="showConfirmPassword ? 'text' : 'password'"
-                class="form-control"
-                id="confirmPassword"
-                v-model.trim="confirmPassword"
-                @blur="touched.confirmPassword = true"
-                required
-              />
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                @click="toggleConfirmPasswordVisibility"
-              >
-                <i
-                  :class="{
-                    'bx bx-hide': showConfirmPassword === true,
-                    'bx bx-show': showConfirmPassword === false,
-                  }"
-                ></i>
-              </button>
-              <h6
-                v-if="touched.confirmPassword && !validatePassword"
-                class="text-danger"
-              >
-                Passwords do not match!
-              </h6>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            class="btn btn-primary w-100"
-            :disabled="!isFormValid"
+  <v-container fluid class="fill-height pa-0">
+    <v-row justify="center" align="center" class="fill-height">
+      <v-col cols="12" sm="10" md="8" lg="4" xl="3">
+        <v-card class="elevation-6">
+          <v-card-title class="text-h4 text-center py-4 border-bottom">
+            Sign Up</v-card-title
           >
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
+          <v-card-text>
+            <v-form
+              ref="form"
+              v-model="isFormValid"
+              @submit.prevent="submit"
+              class="px-2"
+            >
+              <v-row dense>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="first_name"
+                    :rules="firstNameRules"
+                    label="First Name"
+                    dense
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="last_name"
+                    label="Last Name"
+                    dense
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+
+              <v-text-field
+                v-model="email"
+                :rules="emailRules"
+                label="Email"
+                dense
+                required
+              ></v-text-field>
+
+              <v-text-field
+                v-model="phone_number"
+                :rules="SignphoneRules"
+                label="Phone Number"
+                type="number"
+                dense
+                required
+              ></v-text-field>
+
+              <!-- <v-menu v-model="showDatePicker" :close-on-content-click="false">
+                <template v-slot:activator="{ props }">
+                  <div class="d-flex justify-space-around align-center">
+                    <v-icon
+                      color="#112D4E
+"
+                      class="mb-7 mr-4 ml-4 ml-md-0"
+                      icon="calendar_month"
+                    ></v-icon>
+                    <v-text-field
+                      variant="outlined"
+                      density="compact"
+                      :rules="[required]"
+                      @click="showDatePicker = !showDatePicker"
+                      v-model="dob"
+                      label="Birth Date"
+                      readonly
+                      v-bind="props"
+                    ></v-text-field>
+                  </div>
+                </template>
+                <v-date-picker
+                  v-model="dob"
+                  date-format="MMM d, yyyy"
+                  :max="new Date(Date.now())"
+                  @input="showDatePicker = false"
+                ></v-date-picker>
+              </v-menu> -->
+
+              <v-text-field
+                v-model="password"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
+                label="Password"
+                :rules="passwordRules"
+                @click:append="showPassword = !showPassword"
+                dense
+                required
+              ></v-text-field>
+
+              <v-text-field
+                v-model="confirmPassword"
+                :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                label="Confirm Password"
+                :rules="confirmPasswordRules"
+                @click:append="showConfirmPassword = !showConfirmPassword"
+                dense
+                required
+              ></v-text-field>
+
+              <v-btn
+                color="primary"
+                class="mt-2"
+                block
+                :disabled="!isFormValid"
+                type="submit"
+                small
+              >
+                Submit
+              </v-btn>
+            </v-form>
+
+            <p class="text-caption mt-3">
+              Already have an account?
+              <router-link
+                to="/login"
+                class="text-primary font-weight-bold no-underline"
+              >
+                Log In
+              </router-link>
+            </p>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import validator from "validator";
 import { registerUser } from "@/services/SignUpApi";
 import { errorToast } from "@/utils/toast";
 import { countryCode } from "@/config";
+import validator from "validator";
 
 export default {
   data() {
     return {
-      password: "",
-      displayError: false,
+      isFormValid: false,
       first_name: "",
       last_name: "",
+      email: "",
       phone_number: "",
       dob: "",
-      email: "",
+      password: "",
       confirmPassword: "",
       showPassword: false,
       showConfirmPassword: false,
-      touched: {
-        first_name: false,
-        email: false,
-        dob: false,
-        password: false,
-        phone_number: false,
-        confirmPassword: false,
-      },
+      menu: false,
+      birthDate: "",
     };
   },
-  watch: {
-    password(newVal) {
-      const hasUpperCase = /[A-Z]/.test(newVal);
-      const hasLowerCase = /[a-z]/.test(newVal);
-      const hasDigit = /\d/.test(newVal);
-      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newVal);
-      const isValidLength = newVal.length >= 8;
-
-      this.displayError = !(
-        isValidLength &&
-        hasUpperCase &&
-        hasLowerCase &&
-        hasDigit &&
-        hasSpecialChar
-      );
-    },
-  },
   computed: {
-    isEmailValid() {
-      return validator.isEmail(this.email);
+    firstNameRules() {
+      return [(v) => !!v || "Required"];
     },
-    isFirstNameValid() {
-      return this.first_name !== "";
+    emailRules() {
+      return [
+        (v) => !!v || "Required",
+        (v) => validator.isEmail(v) || "Invalid email",
+      ];
     },
-    isDobValid() {
-      if (!this.dob) return true; // Return true if DOB is not provided
+    phoneRules() {
+      return [
+        (v) => !!v || "Required",
+        (v) => v.toString().length === 10 || "Must be 10 digits",
+      ];
+    },
+    dobRules() {
+      return [
+        (v) => !!v || "Required",
+        (v) => {
+          const dob = new Date(v); // Convert input to Date object
+          if (isNaN(dob)) return "Invalid date"; // Handle invalid date input
 
-      const dob = new Date(this.dob);
-      const today = new Date();
-      const age = today.getFullYear() - dob.getFullYear();
+          const today = new Date();
+          const age = today.getFullYear() - dob.getFullYear();
 
-      // Check if the current date has passed the birthday this year
-      const hasBirthdayPassed =
-        today.getMonth() > dob.getMonth() ||
-        (today.getMonth() === dob.getMonth() &&
-          today.getDate() >= dob.getDate());
+          const birthdayThisYear = new Date(
+            today.getFullYear(),
+            dob.getMonth(),
+            dob.getDate()
+          );
 
-      return age > 13 || (age === 13 && hasBirthdayPassed);
+          const hasBirthdayPassed = today >= birthdayThisYear;
+
+          return (
+            age > 13 ||
+            (age === 13 && hasBirthdayPassed) ||
+            "Must be 13+ years old"
+          );
+        },
+      ];
     },
-    isPhoneNumberValid() {
-      return this.phone_number.toString().length === 10;
+    passwordRules() {
+      return [
+        (v) => !!v || "Please enter password",
+        (v) => v.length >= 8 || "Password must be minimum 8 characters",
+        (v) =>
+          /[A-Z]/.test(v) ||
+          "Password must contain atleast one uppercase character",
+        (v) =>
+          /[a-z]/.test(v) ||
+          "Password must contain atleast one lowercase character",
+        (v) => /\d/.test(v) || "Password must contain atleast one number",
+        (v) =>
+          /[!@#$%^&*(),.?":{}|<>]/.test(v) ||
+          "Password must contain atleast one special character",
+      ];
     },
-    validatePassword() {
-      return this.password === this.confirmPassword;
-    },
-    isFormValid() {
-      return (
-        this.isEmailValid &&
-        this.isFirstNameValid &&
-        !this.displayError && // password validation
-        this.validatePassword &&
-        this.isDobValid &&
-        this.phone_number // check if not empty
-      );
+    confirmPasswordRules() {
+      return [
+        (v) => !!v || "Required",
+        (v) => v === this.password || "Passwords don't match",
+      ];
     },
   },
   methods: {
-    togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
-    },
-    toggleConfirmPasswordVisibility() {
-      this.showConfirmPassword = !this.showConfirmPassword;
-    },
     async submit() {
-      try {
-        const payload = {
-          first_name: this.first_name,
-          last_name: this.last_name,
-          email: this.email,
-          country_code: countryCode,
-          phone_number: this.phone_number.toString(),
-          dob: this.dob,
-          password: this.password,
-          role: "Customer",
-        };
+      if (this.$refs.form.validate()) {
+        try {
+          const payload = {
+            first_name: this.first_name,
+            last_name: this.last_name,
+            email: this.email,
+            country_code: countryCode,
+            phone_number: this.phone_number.toString(),
+            dob: this.dob,
+            password: this.password,
+            role: "Customer",
+          };
 
-        const response = await registerUser(payload);
+          const response = await registerUser(payload);
 
-        if (response.status === 200) {
-          this.$router.push({
-            path: "/login",
-            query: {
-              message:
-                response.data.message ||
-                "Registration successful! Please log in.",
-            },
-          });
+          if (response.status === 200) {
+            this.$router.push({
+              path: "/login",
+              query: {
+                message:
+                  response.data.message ||
+                  "Registration successful! Please log in.",
+              },
+            });
+          }
+        } catch (error) {
+          errorToast(error);
         }
-      } catch (error) {
-        errorToast(error);
       }
     },
   },
@@ -308,10 +253,7 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-.text-danger {
-  color: red;
+.no-underline {
+  text-decoration: none;
 }
 </style>

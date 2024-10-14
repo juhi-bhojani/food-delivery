@@ -19,6 +19,7 @@
     "vue-cookies": "^1.8.4",
     "vue-router": "^4.4.5",
     "vue3-toastify": "^0.1.14",
+    "vuetify": "^3.7.2",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

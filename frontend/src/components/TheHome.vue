@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4 v-if="user">{{ fullName }}</h4>
-    <h1 v-else>Welcome User!</h1>
+    <h1 v-else>Home Page</h1>
   </div>
 </template>
 
@@ -23,7 +23,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["login", "initializeLoginState"]),
+    ...mapActions(["initializeLoginState"]),
     async checkCookiesAndFetchUserDetails() {
       await this.initializeLoginState();
     },

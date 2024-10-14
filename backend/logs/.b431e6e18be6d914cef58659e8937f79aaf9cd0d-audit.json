@@ -54,6 +54,11 @@
             "date": 1728624567593,
             "name": "/home/juhi/Techs/food-delivery/backend/logs/food-application-2024-10-11.log",
             "hash": "d5ae8205c8701a0885f231ca517cb0b4c88e56416440c67efe65a4988ded191a"
+        },
+        {
+            "date": 1728881950329,
+            "name": "/home/juhi/Techs/food-delivery/backend/logs/food-application-2024-10-14.log",
+            "hash": "36f075a8a3145a2e380ced5e7901ba14f1529d89dd7966743d603f9f352fea7d"
         }
     ],
     "hashType": "sha256"

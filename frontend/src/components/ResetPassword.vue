@@ -1,84 +1,47 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center">
-    <div class="card" style="width: 30rem">
-      <div class="card-body">
-        <h3 class="card-title text-center">Reset Password</h3>
-        <form @submit.prevent="submit">
-          <!-- Password -->
-          <div class="mb-3 row">
-            <label for="inputPassword" class="col-sm-4 col-form-label"
-              >Password</label
-            >
-            <div class="col-sm-8">
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                class="form-control"
-                id="inputPassword"
-                v-model.trim="password"
-                required
-              />
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                @click="togglePasswordVisibility"
-              >
-                <i
-                  :class="{
-                    'bx bx-hide': showPassword === true,
-                    'bx bx-show': showPassword === false,
-                  }"
-                ></i>
-              </button>
-              <h6 v-if="displayError" style="color: red">
-                Password must be 8 characters long, one uppercase, one
-                lowercase, and one special symbol.
-              </h6>
-            </div>
-          </div>
-
-          <!-- Confirm Password -->
-          <div class="mb-3 row">
-            <label for="confirmPassword" class="col-sm-4 col-form-label"
-              >Confirm Password</label
-            >
-            <div class="col-sm-8">
-              <input
-                :type="showConfirmPassword ? 'text' : 'password'"
-                class="form-control"
-                id="confirmPassword"
-                v-model.trim="confirmPassword"
-                required
-                @input="validatePasswords()"
-              />
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                @click="toggleConfirmPasswordVisibility"
-              >
-                <i
-                  :class="{
-                    'bx bx-hide': showConfirmPassword === true,
-                    'bx bx-show': showConfirmPassword === false,
-                  }"
-                ></i>
-              </button>
-              <h6 v-if="error.confirmPassword" style="color: red">
-                Passwords do not match!
-              </h6>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            class="btn btn-primary w-100"
-            :disabled="displayError || password !== confirmPassword"
+  <v-container fluid class="fill-height pa-0">
+    <v-row justify="center" align="center" class="fill-height">
+      <v-col cols="12" sm="10" md="8" lg="4" xl="3">
+        <v-card class="elevation-6">
+          <v-card-title class="text-h4 text-center py-4 border-bottom">
+            Reset Password</v-card-title
           >
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
+          <v-card-text>
+            <v-form @submit.prevent="submit">
+              <v-text-field
+                :type="showPassword ? 'text' : 'password'"
+                v-model="password"
+                label="Password"
+                :rules="passwordRules"
+                required
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="showPassword = !showPassword"
+              ></v-text-field>
+
+              <v-text-field
+                :type="showConfirmPassword ? 'text' : 'password'"
+                v-model="confirmPassword"
+                label="Confirm Password"
+                :rules="confirmPasswordRules"
+                required
+                :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="showConfirmPassword = !showConfirmPassword"
+              ></v-text-field>
+
+              <v-btn
+                type="submit"
+                color="primary"
+                class="w-100"
+                :disabled="password !== confirmPassword"
+              >
+                Submit
+              </v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -91,42 +54,36 @@ export default {
     return {
       password: "",
       confirmPassword: "",
-      displayError: false,
       showConfirmPassword: false,
       showPassword: false,
       token: this.$route.params.token,
-      error: {
-        confirmPassword: false,
-      },
     };
   },
-  watch: {
-    password(newVal) {
-      const hasUpperCase = /[A-Z]/.test(newVal);
-      const hasLowerCase = /[a-z]/.test(newVal);
-      const hasDigit = /\d/.test(newVal);
-      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newVal);
-      const isValidLength = newVal.length >= 8;
-
-      this.displayError = !(
-        isValidLength &&
-        hasUpperCase &&
-        hasLowerCase &&
-        hasDigit &&
-        hasSpecialChar
-      );
+  computed: {
+    passwordRules() {
+      return [
+        (v) => !!v || "Please enter password",
+        (v) => v.length >= 8 || "Password must be minimum 8 characters",
+        (v) =>
+          /[A-Z]/.test(v) ||
+          "Password must contain atleast one uppercase character",
+        (v) =>
+          /[a-z]/.test(v) ||
+          "Password must contain atleast one lowercase character",
+        (v) => /\d/.test(v) || "Password must contain atleast one number",
+        (v) =>
+          /[!@#$%^&*(),.?":{}|<>]/.test(v) ||
+          "Password must contain atleast one special character",
+      ];
+    },
+    confirmPasswordRules() {
+      return [
+        (v) => !!v || "Required",
+        (v) => v === this.password || "Passwords don't match",
+      ];
     },
   },
   methods: {
-    togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
-    },
-    toggleConfirmPasswordVisibility() {
-      this.showConfirmPassword = !this.showConfirmPassword;
-    },
-    validatePasswords() {
-      this.error.confirmPassword = this.password !== this.confirmPassword;
-    },
     async submit() {
       try {
         // Creating payload for request
@@ -149,8 +106,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.card {
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-</style>
+<style scoped></style>

@@ -1,80 +1,71 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center flex-column">
-    <div v-if="message" class="success-message mb-3">{{ message }}</div>
-    <div class="card" style="width: 30rem">
-      <div class="card-body">
-        <h5 class="card-title text-center">Login</h5>
-        <form @submit.prevent="submit">
-          <div class="mb-3 row">
-            <label for="email" class="col-sm-4 col-form-label">Email</label>
-            <div class="col-sm-8">
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                v-model.trim="email"
-                @blur="touched.email = true"
-                required
-              />
-              <h6 v-if="touched.email && !isEmailValid" class="text-danger">
-                Please enter a valid email address!
-              </h6>
-            </div>
-          </div>
-
-          <div class="mb-3 row">
-            <label for="inputPassword" class="col-sm-4 col-form-label"
-              >Password</label
+  <v-container fluid class="fill-height pa-0">
+    <v-row justify="center" align="center" class="fill-height">
+      <v-col cols="12" sm="10" md="8" lg="4" xl="3">
+        <v-card class="elevation-6">
+          <v-card-title class="text-h4 text-center py-2">Log In</v-card-title>
+          <v-card-text>
+            <v-form
+              @submit.prevent="submit"
+              ref="loginForm"
+              v-model="isFormValid"
             >
-            <div class="col-sm-8">
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                class="form-control"
-                id="inputPassword"
-                v-model.trim="password"
-                @blur="touched.password = true"
+              <!-- Email Input -->
+              <v-text-field
+                v-model="email"
+                :rules="emailRules"
+                label="Email"
+                dense
                 required
-              />
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                @click="togglePasswordVisibility"
+              ></v-text-field>
+
+              <!-- Password Input -->
+              <v-text-field
+                v-model="password"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
+                label="Password"
+                :rules="[passwordRules]"
+                @click:append="showPassword = !showPassword"
+                dense
+                required
+              ></v-text-field>
+
+              <!-- Submit Button -->
+              <v-btn
+                color="primary"
+                block
+                :disabled="!isFormValid"
+                type="submit"
+                class="mt-4"
               >
-                <i
-                  :class="{
-                    'bx bx-hide': showPassword === true,
-                    'bx bx-show': showPassword === false,
-                  }"
-                ></i>
-              </button>
+                Submit
+              </v-btn>
+            </v-form>
+
+            <div class="text-center mt-5">
+              <p class="forgot-password-text">
+                Forgot Password? No worries! Click here to generate a new one.
+              </p>
+              <v-btn
+                text
+                color="primary"
+                class="mt-2 forgot-password-btn"
+                to="/forgot-password"
+              >
+                Forgot Password
+              </v-btn>
             </div>
-          </div>
-
-          <button
-            type="submit"
-            class="btn btn-primary w-100"
-            :disabled="!isFormValid"
-          >
-            Submit
-          </button>
-        </form>
-
-        <div class="mt-3 text-center">
-          <p class="small text-muted">
-            Forgot your password? No worries! Click below to reset it.
-          </p>
-          <router-link to="/forgot-password" class="text-primary"
-            >Forgot Password</router-link
-          >
-        </div>
-      </div>
-    </div>
-  </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import { loginUser } from "@/services/LogInApi";
-import { errorToast } from "@/utils/toast";
+import { errorToast, successToast } from "@/utils/toast";
 import validator from "validator";
 import { mapActions } from "vuex";
 
@@ -84,33 +75,28 @@ export default {
       email: "",
       password: "",
       showPassword: false,
-      touched: {
-        email: false,
-      },
+      isFormValid: false,
     };
   },
   computed: {
-    isEmailValid() {
-      return validator.isEmail(this.email);
+    emailRules() {
+      return [
+        (v) => !!v || "Required",
+        (v) => validator.isEmail(v) || "Invalid email",
+      ];
     },
-    isFormValid() {
-      return this.isEmailValid && this.password;
+    passwordRules() {
+      return (v) => !!v || "Password is required";
     },
-    message() {
-      return this.$route.query.message;
-    },
+  },
+  mounted() {
+    if (this.$route.query.message) {
+      successToast(this.$route.query.message);
+    }
   },
   methods: {
     ...mapActions(["login", "user"]),
-    togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
-    },
     async submit() {
-      if (!this.isEmailValid) {
-        this.touched.email = true;
-        return;
-      }
-
       try {
         const payload = {
           email: this.email,
@@ -122,9 +108,7 @@ export default {
         if (response.status === 200) {
           this.login();
           this.user(response.data.data.user);
-          this.$router.push({
-            path: "/",
-          });
+          this.$router.push({ path: "/" });
         }
       } catch (error) {
         errorToast(error);
@@ -135,14 +119,18 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+.forgot-password-text {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 10px;
 }
-.text-danger {
-  color: red;
+
+.forgot-password-btn {
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
 }
-.success-message {
-  color: green;
-  font-size: 1.2rem;
+
+.forgot-password-btn:hover {
+  background-color: rgba(25, 118, 210, 0.1);
 }
 </style>

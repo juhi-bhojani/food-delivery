@@ -1,41 +1,44 @@
 <template>
   <div>
-    <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container-fluid">
-        <router-link to="/" class="navbar-brand">Foodie</router-link>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarText"
-          aria-controls="navbarText"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+    <v-toolbar :elevation="5">
+      <router-link to="/" class="toolbar-link">
+        <v-toolbar-title class="title">MealMates</v-toolbar-title>
+      </router-link>
+      <v-spacer></v-spacer>
+
+      <template v-if="!isLoggedIn">
+        <!-- classes here ensure that it is visible on medium or higher screens -->
+        <v-btn to="/login" class="d-none d-md-flex" variant="text">Login</v-btn>
+        <v-btn to="/register" class="d-none d-md-flex" variant="text"
+          >Sign-Up</v-btn
         >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <router-link class="nav-link active" aria-current="page" to="/"
-                >Home</router-link
-              >
-            </li>
-          </ul>
-          <span class="navbar-text me-3" v-if="!isLoggedIn">
-            <router-link class="nav-link" to="/login">Login</router-link>
-          </span>
-          <span class="navbar-text" v-if="!isLoggedIn">
-            <router-link class="nav-link" to="/register">Sign-up</router-link>
-          </span>
-          <span class="navbar-text" v-if="isLoggedIn">
-            <router-link class="nav-link" to="/" @click="logOutUser"
-              >Logout</router-link
-            >
-          </span>
-        </div>
-      </div>
-    </nav>
+      </template>
+
+      <!-- Hamburger menu for mobile view -->
+      <v-menu v-if="!isLoggedIn">
+        <template v-slot:activator="{ props }">
+          <v-btn icon class="d-md-none" v-bind="props">
+            <v-icon>mdi-menu</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item to="/login"> Login </v-list-item>
+          <v-list-item to="/register"> Sign-Up </v-list-item>
+        </v-list>
+      </v-menu>
+
+      <v-btn
+        icon
+        to="/login"
+        v-if="isLoggedIn"
+        @click="logOutUser"
+        elevation="0"
+        variant="plain"
+      >
+        <v-icon>mdi-export</v-icon>
+      </v-btn>
+    </v-toolbar>
   </div>
 </template>
 
@@ -48,20 +51,28 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: "getLoginDetails",
+      user: "getUserDetails",
     }),
   },
   methods: {
-    ...mapActions(["logout"]),
+    ...mapActions(["logout", "clearUser"]),
     async logOutUser() {
       try {
         const response = await logoutUser();
         if (response.status === 200) {
           this.logout();
+          this.clearUser();
+          console.log("Hi");
+          console.log(this.$router);
 
           // Redirect user with a success message
-          this.$router.push({
-            path: "/login",
-          });
+          // this.$router.replace({
+          //   path: "/login",
+          //   query: {
+          //     message: "Logout Successful!",
+          //   },
+          // });
+          this.$router.replace("/login");
         }
       } catch (error) {
         errorToast(error);
@@ -72,9 +83,20 @@ export default {
 </script>
 
 <style scoped>
-.navbar {
-  top: -59px;
-  padding-left: 20px;
-  padding-right: 20px;
+.toolbar-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  left: 3%;
+  position: relative;
+  font-weight: normal;
+}
+
+.toolbar-link:hover {
+  font-weight: 900;
+}
+
+.title {
+  font-weight: 100;
 }
 </style>

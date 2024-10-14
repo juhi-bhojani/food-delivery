@@ -53,6 +53,6 @@ app.get("/", async (req, res) => {
 app.use(errorMiddleware);
 
 app.listen(3000, () => {
-  database.check();
+  database.connectDB();
   console.log("Listening to port");
 });

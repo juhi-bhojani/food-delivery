@@ -70,7 +70,12 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth === false && isLoggedIn) {
     // If the route does not require authentication and the user is logged in,
     // redirect them to the dashboard or a default authenticated route.
-    next("/dashboard");
+    if (to.path === "/") {
+      // incase user wants to go to home page, allow it
+      next();
+    } else {
+      next("/dashboard");
+    }
   } else if (to.meta.requiresAuth === true && !isLoggedIn) {
     next("/login");
   } else {

@@ -1,50 +1,51 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center">
-    <div class="card" style="width: 30rem">
-      <div class="card-body">
-        <h5 class="card-title text-center">Forgot Password</h5>
-
-        <!-- Form for entering email -->
-        <form @submit.prevent="submit">
-          <div class="mb-3 row">
-            <label for="email" class="col-sm-4 col-form-label">Email</label>
-            <div class="col-sm-8">
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                v-model.trim="email"
-                required
-                @input="validateEmail()"
-              />
-              <h6 v-if="error.email" style="color: red">
-                Please enter a valid email!
-              </h6>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            class="btn btn-primary w-100"
-            :disabled="error.email || isLoading"
+  <v-container fluid class="fill-height pa-0">
+    <v-row justify="center" align="center" class="fill-height">
+      <v-col cols="12" sm="10" md="8" lg="4" xl="3">
+        <v-card class="elevation-6">
+          <v-card-title class="text-h4 text-center"
+            >Forgot Password</v-card-title
           >
-            <span v-if="isLoading">Loading...</span>
-            <!-- Loading text -->
-            <span v-else>Submit</span>
-          </button>
-        </form>
+          <v-card-text>
+            <v-form @submit.prevent="submit" ref="form" v-model="isFormValid">
+              <v-text-field
+                v-model="email"
+                :rules="emailRules"
+                label="Email"
+                dense
+                required
+              ></v-text-field>
 
-        <div class="mt-3 text-center">
-          <p class="small text-muted">
-            Enter your email to receive password reset instructions.
-          </p>
-          <router-link to="/login" class="text-primary">
-            Back to Login
-          </router-link>
-        </div>
-      </div>
-    </div>
-  </div>
+              <v-btn
+                color="primary"
+                block
+                :disabled="error.email || isLoading"
+                type="submit"
+                class="mt-3"
+              >
+                <span v-if="isLoading">Loading...</span>
+                <span v-else>Submit</span>
+              </v-btn>
+            </v-form>
+
+            <div class="text-center mt-3">
+              <p class="text-caption text-muted">
+                Enter your email to receive password reset instructions.
+              </p>
+              <router-link
+                to="/login"
+                style="color: inherit; text-decoration: none"
+              >
+                <span class="text-primary" style="color: inherit"
+                  >Back to Login</span
+                >
+              </router-link>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -62,10 +63,15 @@ export default {
       isLoading: false, // Loading state
     };
   },
-  methods: {
-    validateEmail() {
-      this.error.email = !validator.isEmail(this.email);
+  computed: {
+    emailRules() {
+      return [
+        (v) => !!v || "Required",
+        (v) => validator.isEmail(v) || "Invalid email",
+      ];
     },
+  },
+  methods: {
     async submit() {
       this.isLoading = true; // Start loading
       try {
@@ -78,7 +84,6 @@ export default {
           infoToast(
             "Password reset instructions have been sent to your email."
           );
-          this.email = ""; // Clear email input
         }
       } catch (error) {
         errorToast(error);

@@ -18,3 +18,12 @@ export const infoToast = function (message) {
     dangerouslyHTMLString: true,
   });
 };
+
+export const successToast = function (message) {
+  toast(message, {
+    theme: "auto",
+    type: "success",
+    position: "top-right",
+    dangerouslyHTMLString: true,
+  });
+};

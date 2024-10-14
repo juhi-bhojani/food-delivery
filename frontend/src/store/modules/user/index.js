@@ -15,10 +15,10 @@ const userModule = {
     logout(state) {
       state.isLoggedIn = false;
     },
-    set_user(state, userDetails) {
+    setUser(state, userDetails) {
       state.user = userDetails;
     },
-    clear_user(state) {
+    clearUser(state) {
       state.user = null;
     },
   },
@@ -27,8 +27,10 @@ const userModule = {
       context.commit("login");
     },
     logout(context) {
-      context.commit("clear_user");
       context.commit("logout");
+    },
+    clearUser(context) {
+      context.commit("clearUser");
     },
     async initializeLoginState(context) {
       try {
@@ -37,10 +39,11 @@ const userModule = {
         });
 
         if (response.status === 200) {
-          context.commit("set_user", response?.data?.data?.user);
+          context.commit("setUser", response?.data?.data?.user);
           context.commit("login");
         }
       } catch (error) {
+        context.commit("clearUser");
         context.commit("logout");
       }
     },
