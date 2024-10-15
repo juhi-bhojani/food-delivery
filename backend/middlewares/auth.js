@@ -36,6 +36,7 @@ const auth = async (req, res, next) => {
       // calling next middleware
       next();
     } else {
+      res.clearCookie("accessToken");
       throw new Error();
     }
   } catch (error) {

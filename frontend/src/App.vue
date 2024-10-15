@@ -9,9 +9,16 @@
 
 <script>
 import TheHeader from "./components/TheHeader.vue";
+import { mapActions } from "vuex";
 export default {
   components: { TheHeader },
   name: "App",
+  created() {
+    this.initializeLoginState();
+  },
+  methods: {
+    ...mapActions(["initializeLoginState"]),
+  },
 };
 </script>
 

@@ -63,18 +63,29 @@ const router = createRouter({
   ],
 });
 
+const notAllwodPathAfterLogin = [
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/reset-password/:token",
+];
+
 // navigation guard to avoid hitting certain routes when authenticated
 router.beforeEach(async (to, from, next) => {
   await store.dispatch("initializeLoginState");
   const isLoggedIn = store.getters["getLoginDetails"]; // Vuex getter
+
   if (to.meta.requiresAuth === false && isLoggedIn) {
     // If the route does not require authentication and the user is logged in,
     // redirect them to the dashboard or a default authenticated route.
-    if (to.path === "/") {
+    if (
+      notAllwodPathAfterLogin.includes(to.path) ||
+      notAllwodPathAfterLogin.includes(to.matched[0].path)
+    ) {
       // incase user wants to go to home page, allow it
-      next();
-    } else {
       next("/dashboard");
+    } else {
+      next();
     }
   } else if (to.meta.requiresAuth === true && !isLoggedIn) {
     next("/login");

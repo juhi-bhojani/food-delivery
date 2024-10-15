@@ -3,7 +3,7 @@
     <v-row justify="center" align="center" class="fill-height">
       <v-col cols="12" sm="10" md="8" lg="4" xl="3">
         <v-card class="elevation-6">
-          <v-card-title class="text-h4 text-center py-4 border-bottom">
+          <v-card-title class="text-h5 text-center py-4 border-bottom">
             Sign Up</v-card-title
           >
           <v-card-text>
@@ -42,41 +42,36 @@
 
               <v-text-field
                 v-model="phone_number"
-                :rules="SignphoneRules"
+                :rules="phoneRules"
                 label="Phone Number"
                 type="number"
                 dense
                 required
               ></v-text-field>
 
-              <!-- <v-menu v-model="showDatePicker" :close-on-content-click="false">
+              <v-menu
+                v-model="menu"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset="0"
+              >
                 <template v-slot:activator="{ props }">
-                  <div class="d-flex justify-space-around align-center">
-                    <v-icon
-                      color="#112D4E
-"
-                      class="mb-7 mr-4 ml-4 ml-md-0"
-                      icon="calendar_month"
-                    ></v-icon>
-                    <v-text-field
-                      variant="outlined"
-                      density="compact"
-                      :rules="[required]"
-                      @click="showDatePicker = !showDatePicker"
-                      v-model="dob"
-                      label="Birth Date"
-                      readonly
-                      v-bind="props"
-                    ></v-text-field>
-                  </div>
+                  <v-text-field
+                    v-model="formattedDate"
+                    label="Date of Birth"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="props"
+                    :rules="dobRules"
+                    clearable
+                    @click:clear="clearDate"
+                  ></v-text-field>
                 </template>
                 <v-date-picker
                   v-model="dob"
-                  date-format="MMM d, yyyy"
-                  :max="new Date(Date.now())"
-                  @input="showDatePicker = false"
+                  @update:model-value="selectDate"
                 ></v-date-picker>
-              </v-menu> -->
+              </v-menu>
 
               <v-text-field
                 v-model="password"
@@ -112,7 +107,7 @@
               </v-btn>
             </v-form>
 
-            <p class="text-caption mt-3">
+            <!-- <p class="text-caption mt-3">
               Already have an account?
               <router-link
                 to="/login"
@@ -120,7 +115,25 @@
               >
                 Log In
               </router-link>
-            </p>
+            </p> -->
+
+            <div class="text-center my-4">
+              <span><b>OR</b></span>
+            </div>
+
+            <!-- Google Login Button -->
+            <div class="text-center">
+              <v-btn
+                class="google-login-btn mt-2"
+                color="white"
+                elevation="2"
+                @click="loginWithGoogle"
+                block
+              >
+                <v-icon left class="mr-2">mdi-google</v-icon>
+                Login with Google
+              </v-btn>
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -142,16 +155,35 @@ export default {
       last_name: "",
       email: "",
       phone_number: "",
-      dob: "",
+      dob: null,
       password: "",
       confirmPassword: "",
       showPassword: false,
       showConfirmPassword: false,
       menu: false,
-      birthDate: "",
+      maxDate: new Date().toISOString().substr(0, 10),
     };
   },
   computed: {
+    formattedDate() {
+      if (!this.dob) return "";
+      let date;
+
+      if (typeof this.dob === "string") {
+        // If dob is already a string, try to create a Date object
+        date = new Date(this.dob);
+      } else if (this.dob instanceof Date) {
+        // If dob is already a Date object, use it directly
+        date = this.dob;
+      } else {
+        // If dob is neither a string nor a Date, return an empty string
+        return "";
+      } // Format the date
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      const year = date.getFullYear();
+      return `${month}/${day}/${year}`;
+    },
     firstNameRules() {
       return [(v) => !!v || "Required"];
     },
@@ -171,25 +203,17 @@ export default {
       return [
         (v) => !!v || "Required",
         (v) => {
-          const dob = new Date(v); // Convert input to Date object
-          if (isNaN(dob)) return "Invalid date"; // Handle invalid date input
-
+          const birthDate = new Date(v);
           const today = new Date();
-          const age = today.getFullYear() - dob.getFullYear();
-
-          const birthdayThisYear = new Date(
-            today.getFullYear(),
-            dob.getMonth(),
-            dob.getDate()
-          );
-
-          const hasBirthdayPassed = today >= birthdayThisYear;
-
-          return (
-            age > 13 ||
-            (age === 13 && hasBirthdayPassed) ||
-            "Must be 13+ years old"
-          );
+          let age = today.getFullYear() - birthDate.getFullYear();
+          const monthDiff = today.getMonth() - birthDate.getMonth();
+          if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birthDate.getDate())
+          ) {
+            age--;
+          }
+          return age >= 13 || "You must be at least 13 years old";
         },
       ];
     },
@@ -217,6 +241,14 @@ export default {
     },
   },
   methods: {
+    selectDate(date) {
+      this.dob = date;
+      this.menu = false; // Close the menu
+    },
+    clearDate() {
+      this.dob = null;
+      this.menu = false;
+    },
     async submit() {
       if (this.$refs.form.validate()) {
         try {
@@ -247,6 +279,9 @@ export default {
           errorToast(error);
         }
       }
+    },
+    async loginWithGoogle() {
+      // write login logic
     },
   },
 };

@@ -43,6 +43,24 @@
               </v-btn>
             </v-form>
 
+            <div class="text-center my-4">
+              <span><b>OR</b></span>
+            </div>
+
+            <!-- Google Login Button -->
+            <div class="text-center">
+              <v-btn
+                class="google-login-btn mt-2"
+                color="white"
+                elevation="2"
+                @click="loginWithGoogle"
+                block
+              >
+                <v-icon left class="mr-2">mdi-google</v-icon>
+                Login with Google
+              </v-btn>
+            </div>
+
             <div class="text-center mt-5">
               <p class="forgot-password-text">
                 Forgot Password? No worries! Click here to generate a new one.
@@ -114,6 +132,9 @@ export default {
         errorToast(error);
       }
     },
+    async loginWithGoogle(){
+      // write login logic
+    }
   },
 };
 </script>
