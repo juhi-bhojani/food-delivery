@@ -22,11 +22,11 @@
               <!-- Password Input -->
               <v-text-field
                 v-model="password"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
                 label="Password"
                 :rules="[passwordRules]"
-                @click:append="showPassword = !showPassword"
+                @click:appendInner="showPassword = !showPassword"
                 dense
                 required
               ></v-text-field>
@@ -132,9 +132,9 @@ export default {
         errorToast(error);
       }
     },
-    async loginWithGoogle(){
+    async loginWithGoogle() {
       // write login logic
-    }
+    },
   },
 };
 </script>

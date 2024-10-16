@@ -14,8 +14,8 @@
                 label="Password"
                 :rules="passwordRules"
                 required
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append="showPassword = !showPassword"
+                :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:appendInner="showPassword = !showPassword"
               ></v-text-field>
 
               <v-text-field
@@ -24,8 +24,10 @@
                 label="Confirm Password"
                 :rules="confirmPasswordRules"
                 required
-                :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append="showConfirmPassword = !showConfirmPassword"
+                :append-inner-icon="
+                  showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'
+                "
+                @click:appendInner="showConfirmPassword = !showConfirmPassword"
               ></v-text-field>
 
               <v-btn

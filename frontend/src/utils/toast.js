@@ -7,6 +7,7 @@ export const errorToast = function (error) {
     type: "error",
     position: "top-right",
     dangerouslyHTMLString: true,
+    hideProgressBar: true,
   });
 };
 
@@ -16,6 +17,7 @@ export const infoToast = function (message) {
     type: "info",
     position: "top-right",
     dangerouslyHTMLString: true,
+    hideProgressBar: true,
   });
 };
 
@@ -25,5 +27,6 @@ export const successToast = function (message) {
     type: "success",
     position: "top-right",
     dangerouslyHTMLString: true,
+    hideProgressBar: true,
   });
 };

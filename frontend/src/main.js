@@ -19,6 +19,4 @@ const vuetify = createVuetify({
   iconfont: "mdi",
 });
 
-store.dispatch("initializeLoginState");
-
 createApp(App).use(vuetify).use(store).use(router).mount("#app");

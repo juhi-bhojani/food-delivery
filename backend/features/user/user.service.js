@@ -8,32 +8,8 @@ import { createUserRole } from "../user_role/user_role.repository.js";
 import decryptData from "../../utils/decryptPassword.js";
 import database from "../../models/index.js";
 const { sequelize } = database.db;
-
-function validatePassword(password) {
-  const minLength = /.{8,}/; // At least 8 characters
-  const hasLowercase = /[a-z]/; // At least one lowercase letter
-  const hasUppercase = /[A-Z]/; // At least one uppercase letter
-  const hasDigit = /[0-9]/; // At least one digit
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/; // At least one special character
-
-  if (!minLength.test(password)) {
-    return "Password must be at least 8 characters long.";
-  }
-  if (!hasLowercase.test(password)) {
-    return "Password must contain at least one lowercase letter.";
-  }
-  if (!hasUppercase.test(password)) {
-    return "Password must contain at least one uppercase letter.";
-  }
-  if (!hasDigit.test(password)) {
-    return "Password must contain at least one digit.";
-  }
-  if (!hasSpecialChar.test(password)) {
-    return "Password must contain at least one special character.";
-  }
-
-  return true;
-}
+import CustomError from "../../utils/customError.js";
+import validatePassword from "../../utils/validatePassword.js";
 
 export const getUserByEmailOrPhone = async (email, phone, roleType) => {
   const user = await getUserAndRolesByEmailOrPhone(email, phone);
@@ -72,17 +48,19 @@ export const getUserByEmailOrPhone = async (email, phone, roleType) => {
 };
 
 export const addUser = async (userDetails, role) => {
-  const transaction = await sequelize.transaction();
+  if (!validator.isEmail(userDetails.email)) {
+    throw new CustomError("Please enter correct email address", 400);
+  }
+
+  userDetails.password = decryptData(userDetails.password);
+
+  const validPassword = validatePassword(userDetails.password);
+
+  if (validPassword !== true) {
+    throw new CustomError(validPassword, 400);
+  }
   try {
-    if (!validator.isEmail(userDetails.email)) {
-      throw new Error("Please enter correct email address");
-    }
-
-    userDetails.password = decryptData(userDetails.password);
-
-    if (validatePassword(userDetails.password) !== true) {
-      throw new Error(validatePassword(userDetails.password));
-    }
+    const transaction = await sequelize.transaction();
 
     // creates new user
     const newuser = await createUser({ ...userDetails }, transaction);
@@ -98,6 +76,6 @@ export const addUser = async (userDetails, role) => {
     return newuser;
   } catch (error) {
     await transaction.rollback();
-    throw new Error();
+    throw new CustomError("Internal Server Error!", 500);
   }
 };

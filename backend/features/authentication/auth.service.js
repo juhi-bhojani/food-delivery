@@ -15,6 +15,7 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import decryptData from "../../utils/decryptPassword.js";
 import CustomError from "../../utils/customError.js";
+import validatePassword from "../../utils/validatePassword.js";
 
 export const loginUser = async (user, roleType) => {
   // decrypt password
@@ -97,6 +98,11 @@ export const sendPasswordResetEmail = async (email) => {
 };
 
 export const passwordReset = async (token, newPassword) => {
+  const validPassword = validatePassword(newPassword);
+
+  if (!validatePassword) {
+    throw new CustomError(validPassword, 400);
+  }
   const resetToken = crypto.createHash("sha256").update(token).digest("hex");
   const user = await findUserByResetToken(resetToken);
 

@@ -62,17 +62,16 @@ export default {
         if (response.status === 200) {
           this.logout();
           this.clearUser();
-          console.log("Hi");
-          console.log(this.$router);
+
+          console.log("this.$router", this.$router);
 
           // Redirect user with a success message
-          // this.$router.replace({
-          //   path: "/login",
-          //   query: {
-          //     message: "Logout Successful!",
-          //   },
-          // });
-          this.$router.replace("/login");
+          this.$router.replace({
+            path: "/login",
+            query: {
+              message: "Logout Successful!",
+            },
+          });
         }
       } catch (error) {
         errorToast(error);

@@ -59,7 +59,7 @@
                   <v-text-field
                     v-model="formattedDate"
                     label="Date of Birth"
-                    prepend-icon="mdi-calendar"
+                    prepend-inner-icon="mdi-calendar"
                     readonly
                     v-bind="props"
                     :rules="dobRules"
@@ -75,22 +75,24 @@
 
               <v-text-field
                 v-model="password"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
                 label="Password"
                 :rules="passwordRules"
-                @click:append="showPassword = !showPassword"
+                @click:appendInner="showPassword = !showPassword"
                 dense
                 required
               ></v-text-field>
 
               <v-text-field
                 v-model="confirmPassword"
-                :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-inner-icon="
+                  showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'
+                "
                 :type="showConfirmPassword ? 'text' : 'password'"
                 label="Confirm Password"
                 :rules="confirmPasswordRules"
-                @click:append="showConfirmPassword = !showConfirmPassword"
+                @click:appendInner="showConfirmPassword = !showConfirmPassword"
                 dense
                 required
               ></v-text-field>
