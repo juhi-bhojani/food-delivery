@@ -6,11 +6,6 @@
     "auditLog": "/home/juhi/Techs/food-delivery/backend/logs/.b431e6e18be6d914cef58659e8937f79aaf9cd0d-audit.json",
     "files": [
         {
-            "date": 1727928307282,
-            "name": "/home/juhi/Techs/food-delivery/backend/logs/food-application-2024-10-03.log",
-            "hash": "5797aa8850e56e051e19700fcb85d892bd411a6cfd8efc2e84ac15b4c20515ca"
-        },
-        {
             "date": 1728013347370,
             "name": "/home/juhi/Techs/food-delivery/backend/logs/food-application-2024-10-04.log",
             "hash": "891238eb71deec97cfc04241165c9942b93075a2b5dd0dbcf9bb8db1dd398773"
@@ -59,6 +54,11 @@
             "date": 1729053207477,
             "name": "/home/juhi/Techs/food-delivery/backend/logs/food-application-2024-10-16.log",
             "hash": "1d9c63674e62cb0c07977755429957f6fd9e4a6c4e9eb77611dec9f00a7b9269"
+        },
+        {
+            "date": 1729168718927,
+            "name": "/home/juhi/Techs/food-delivery/backend/logs/food-application-2024-10-17.log",
+            "hash": "f9bfb95aaf9e6c98b8e2b7421a12ec76f34035136e13fe6e8d4ad5dada85078f"
         }
     ],
     "hashType": "sha256"

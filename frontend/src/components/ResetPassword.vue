@@ -94,9 +94,9 @@ export default {
         };
 
         // Send request to backend for password reset
-        const response = await resetPassword(payload, this.token);
+        const { status } = await resetPassword(payload, this.token);
 
-        if (response.status === 200) {
+        if (status === 200) {
           infoToast("Password reset successful.");
           this.$router.push({ path: "/login" });
         }

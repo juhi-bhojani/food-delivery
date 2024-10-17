@@ -7,18 +7,22 @@ axios.defaults.withCredentials = true;
 export const registerUser = async (payload) => {
   try {
     payload.password = encryptData(payload.password);
-    const response = await axios.post(`${backendUrl}/register`, payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    });
+    const { data, status } = await axios.post(
+      `${backendUrl}/register`,
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
 
-    return response;
+    return { response: data, status };
   } catch (error) {
     throw new Error(
-      error?.response.data?.message ||
-        error?.response.data?.error ||
+      error.response?.data?.message ||
+        error.response?.data?.error ||
         "An error occurred. Please try again."
     );
   }
