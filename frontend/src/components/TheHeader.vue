@@ -58,12 +58,10 @@ export default {
     ...mapActions(["logout", "clearUser"]),
     async logOutUser() {
       try {
-        const response = await logoutUser();
-        if (response.status === 200) {
+        const { status } = await logoutUser();
+        if (status === 200) {
           this.logout();
           this.clearUser();
-
-          console.log("this.$router", this.$router);
 
           // Redirect user with a success message
           this.$router.replace({

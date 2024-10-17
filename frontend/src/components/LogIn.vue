@@ -108,12 +108,10 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.message) {
-      successToast(this.$route.query.message);
-    }
+    this.$route.query.message && successToast(this.$route.query.message);
   },
   methods: {
-    ...mapActions(["login", "user"]),
+    ...mapActions(["login", "setUser"]),
     async submit() {
       try {
         const payload = {
@@ -122,10 +120,10 @@ export default {
           role: "Customer",
         };
 
-        const response = await loginUser(payload);
-        if (response.status === 200) {
+        const { response, status } = await loginUser(payload);
+        if (status === 200) {
           this.login();
-          this.user(response.data.data.user);
+          this.setUser(response.data.user);
           this.$router.push({ path: "/" });
         }
       } catch (error) {

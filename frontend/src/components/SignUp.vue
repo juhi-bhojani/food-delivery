@@ -265,9 +265,9 @@ export default {
             role: "Customer",
           };
 
-          const response = await registerUser(payload);
+          const { response, status } = await registerUser(payload);
 
-          if (response.status === 200) {
+          if (status === 200) {
             this.$router.push({
               path: "/login",
               query: {

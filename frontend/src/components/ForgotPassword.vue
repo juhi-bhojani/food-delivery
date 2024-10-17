@@ -78,13 +78,12 @@ export default {
         const payload = {
           email: this.email,
         };
-        const response = await forgotPassword(payload);
+        const { status } = await forgotPassword(payload);
 
-        if (response.status === 200) {
+        status === 200 &&
           infoToast(
             "Password reset instructions have been sent to your email."
           );
-        }
       } catch (error) {
         errorToast(error);
       } finally {

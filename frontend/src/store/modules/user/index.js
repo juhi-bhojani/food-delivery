@@ -32,14 +32,17 @@ const userModule = {
     clearUser(context) {
       context.commit("clearUser");
     },
+    setUser(context, payload) {
+      context.commit("setUser", payload);
+    },
     async initializeLoginState(context) {
       try {
-        const response = await axios.get(`${backendUrl}/profile`, {
+        const { data, status } = await axios.get(`${backendUrl}/profile`, {
           withCredentials: true,
         });
 
-        if (response.status === 200) {
-          context.commit("setUser", response?.data?.data?.user);
+        if (status === 200) {
+          context.commit("setUser", data?.data?.user);
           context.commit("login");
         }
       } catch (error) {
